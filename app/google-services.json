@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "583101243264",
+    "firebase_url": "https://calibrationchecklist.firebaseio.com",
+    "project_id": "calibrationchecklist",
+    "storage_bucket": "calibrationchecklist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583101243264:android:92fa5c1d87c8968f956b65",
+        "android_client_info": {
+          "package_name": "com.dhumuni.calibrationchecklist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "583101243264-ma1m8esqsn8cvh6mbgsbgi3eito6hl0l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxNAfCJ5qsYDlkAT41BXNK_w03y9w3boU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "583101243264-ma1m8esqsn8cvh6mbgsbgi3eito6hl0l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

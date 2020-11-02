@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="4dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentRight="true">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        >
+        <TextView
+            android:id="@+id/sno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:text="1"
+            android:textSize="40dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/particulars"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/sno"
+            android:layout_toRightOf="@+id/sno"
+            android:layout_marginStart="10dp"
+            android:ems="10"
+            android:text="WHETHER TT CALIBRATION AT IOC SALEM TERMINAL IS DUE?"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:enabled="false"
+            android:layout_marginLeft="10dp" />
+
+        <EditText
+            android:id="@+id/remarks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/particulars"
+            android:layout_alignStart="@id/particulars"
+            android:background="@drawable/edit_round"
+            android:ems="6"
+            android:text="Remarks"
+            android:textSize="20sp"
+            android:layout_alignLeft="@id/particulars" />
+
+        <ImageView
+            android:id="@+id/yes"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignTop="@id/remarks"
+            android:layout_toLeftOf="@id/no"
+            android:layout_marginRight="20dp"/>
+
+        <ImageView
+            android:id="@+id/no"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignTop="@id/remarks"
+            android:layout_toLeftOf="@id/ok"
+            android:layout_marginRight="20dp"/>
+        <ImageView
+            android:id="@+id/ok"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignTop="@id/remarks"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
