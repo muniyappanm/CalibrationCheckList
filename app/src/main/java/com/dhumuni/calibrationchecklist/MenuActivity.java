@@ -12,46 +12,65 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MenuActivity extends AppCompatActivity {
-    Button ttchecklist,report;
+    Button ttchecklist,report,logout;
     TextView loading;
     FireBaseHandler db=new FireBaseHandler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        setTitle("TT Calibration");
         ttchecklist=(Button)findViewById(R.id.button_ttchecklist);
         report=(Button)findViewById(R.id.button_report);
         loading=(TextView)findViewById(R.id.loading);
+        logout=findViewById(R.id.button_logout);
         TTChecklist();
         Report();
-    }
-  /*  @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_scrolling,menu);
-        return true;
-
+        Logout();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    private void Logout() {
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent in = new Intent(MenuActivity.this, MainActivity.class);
+                startActivity(in);
 
-        int id=item.getItemId();
-        switch (id){
-            case R.id.additem_menu:
-                startActivity(new Intent(MenuActivity.this,AddItem.class));
-                break;
-        }
-
-        return true;
+            }
+        });
     }
-*/
+
+    /*  @Override
+      public boolean onCreateOptionsMenu(Menu menu) {
+
+          getMenuInflater().inflate(R.menu.menu_scrolling,menu);
+          return true;
+
+      }
+
+      @Override
+      public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+          int id=item.getItemId();
+          switch (id){
+              case R.id.additem_menu:
+                  startActivity(new Intent(MenuActivity.this,AddItem.class));
+                  break;
+          }
+
+          return true;
+      }
+  */
     @Override
     protected void onStart() {
         super.onStart();
         ttchecklist.setVisibility(View.VISIBLE);
         report.setVisibility(View.VISIBLE);
+        logout.setVisibility(View.VISIBLE);
         loading.setVisibility(View.INVISIBLE);
     }
 
@@ -63,6 +82,7 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(in);
                 ttchecklist.setVisibility(View.INVISIBLE);
                 report.setVisibility(View.INVISIBLE);
+                logout.setVisibility(View.INVISIBLE);
                 loading.setVisibility(View.VISIBLE);
             }
         });

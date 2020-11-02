@@ -77,7 +77,7 @@ public class FireBaseHandler extends AppCompatActivity
         data= new HashMap<>();
         Task<QuerySnapshot> doc=null;
         doc= FirebaseFirestore.getInstance().collection("Calibration")
-                .whereEqualTo("Date",Date).whereEqualTo("TTNumber",TTNumber).whereEqualTo(Sno+Remarks,Remarks).
+                .whereEqualTo("Date",Date).whereEqualTo("TTNumber",TTNumber).whereEqualTo(Sno,Remarks).
                         get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -100,7 +100,7 @@ public class FireBaseHandler extends AppCompatActivity
                 });
     }*/
 
-    public void Update(String Date,String TTNumber, String Sno, String Remarks) {
+    public void Update(String Date,String TTNumber, String Sno,String Remarks) {
         DocumentReference doc=FirebaseFirestore.getInstance().collection("Calibration").
                 document(TTNumber+"_"+Date);
         doc.update(Sno,Remarks);

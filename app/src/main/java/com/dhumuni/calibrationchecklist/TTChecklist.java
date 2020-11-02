@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,6 +35,7 @@ import java.util.Map;
 public class TTChecklist extends AppCompatActivity {
 
     List<String> list = new ArrayList<String>();
+    public String Remark;
     public ArrayList<ExampleItem> mExampleItem=new ArrayList<>();
     private RecyclerView mRecyclerView;
     private ExampleAdapter mAdapter;
@@ -48,6 +50,7 @@ public class TTChecklist extends AppCompatActivity {
     TextView Date,TTNo;
     EditText ttnumber;
     ImageView addchecklist;
+    FloatingActionButton addnew;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,31 +60,47 @@ public class TTChecklist extends AppCompatActivity {
         TTNo=findViewById(R.id.textView_ttnumber);
         ttnumber=findViewById(R.id.editText_ttnumber);
         addchecklist=findViewById(R.id.addchecklist);
+        addnew=findViewById(R.id.addnew);
         buildRecyclerView();
         additem();
+        addnewtt();
         String date_n = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
         Date.setText(date_n);
         onSetDate();
+    }
+
+    private void addnewtt() {
+        addnew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mExampleItem.clear();
+                mRecyclerView.setLayoutManager(null);
+                buildRecyclerView();
+                addchecklist.setVisibility(View.VISIBLE);
+                ttnumber.setText("");
+            }
+        });
     }
 
     private void additem() {
         addchecklist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] Numbers = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18",
-                "19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40"};
+                if(ttnumber.getText().toString().length()<6) {
+                    Toast.makeText(TTChecklist.this, "Please enter Valid TT No", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                db.Add(ttnumber.getText().toString(),Date.getText().toString());
+                String[] Numbers=new ExampleItem().GetNumbers();
+                String [] Particulars=new ExampleItem().GetParticular();
                 mExampleItem.clear();
                 mRecyclerView.setLayoutManager(null);
                 buildRecyclerView();
-                for (String i:Numbers
-                     ) {
+                for(int i=0;i<Numbers.length;i++) {
                     mExampleItem.add(new ExampleItem(
-                            i, "Advertisements. Java provides a data structure, the array, which stores a " +
-                            "fixed-size sequential collection of elements of the same type. An array is used to store a", "", R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
+                            Numbers[i], Particulars[i], "", R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
                 }
-
-                db.Add(ttnumber.getText().toString(),Date.getText().toString());
-
+                addchecklist.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -107,8 +126,9 @@ public class TTChecklist extends AppCompatActivity {
         {
             @Override
             public void onItemYes(int position, TextView Sno, EditText Remarks) {
-                db.AddChecklist(Sno.getText().toString(),Remarks.getText().toString(),
+                db.AddChecklist(Sno.getText().toString(),"YES",
                         ttnumber.getText().toString(),Date.getText().toString());
+                changeItem(position,"YES");
             }
 
             @Override
@@ -124,11 +144,10 @@ public class TTChecklist extends AppCompatActivity {
 
             @Override
             public void onItemOk(int position, TextView Sno, EditText Remarks,ImageView yes, ImageView no, ImageView ok) {
-
-                changeItem(position,Remarks.getText().toString());
+                Remark="NO: ";
+                changeItem(position,Remark+Remarks.getText().toString());
                 db.Update(Date.getText().toString(),ttnumber.getText().toString(),
-                        Sno.getText().toString(),Remarks.getText().toString()
-                        );
+                        Sno.getText().toString(),Remark+Remarks.getText().toString());
                 yes.setVisibility(View.VISIBLE);
                 no.setVisibility(View.VISIBLE);
                 ok.setVisibility(View.INVISIBLE);
