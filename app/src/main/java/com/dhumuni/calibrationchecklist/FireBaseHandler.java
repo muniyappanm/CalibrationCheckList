@@ -52,13 +52,12 @@ public class FireBaseHandler extends AppCompatActivity
             }
         });
     }
-    public Task<QuerySnapshot> View(String TTNumber)
+    public Task<QuerySnapshot> View()
     {
         FirebaseFirestore db=FirebaseFirestore.getInstance();
         Task<QuerySnapshot> doc=null;
         Map<String ,Object> data= new HashMap<>();
-        doc= FirebaseFirestore.getInstance().collection("Calibration")
-                .whereEqualTo("TTNumber",TTNumber).
+        doc= FirebaseFirestore.getInstance().collection("Calibration").
                         get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -69,7 +68,24 @@ public class FireBaseHandler extends AppCompatActivity
             continue;
         return doc;
     }
-    public Task<QuerySnapshot> View(String Date,String TTNumber,String Sno,String Remarks)
+    public Task<QuerySnapshot> View(String  Label,String finder)
+    {
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        Task<QuerySnapshot> doc=null;
+        Map<String ,Object> data= new HashMap<>();
+        doc= FirebaseFirestore.getInstance().collection("Calibration")
+                .whereEqualTo(Label,finder).
+                        get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        Log.d("Document", "ok");
+                    }
+                });
+        while (!doc.isComplete())
+            continue;
+        return doc;
+    }
+    public Task<QuerySnapshot> ViewOne(String Date,String TTNumber)
     {
         FirebaseFirestore db=null;
         db=FirebaseFirestore.getInstance();
@@ -77,7 +93,7 @@ public class FireBaseHandler extends AppCompatActivity
         data= new HashMap<>();
         Task<QuerySnapshot> doc=null;
         doc= FirebaseFirestore.getInstance().collection("Calibration")
-                .whereEqualTo("Date",Date).whereEqualTo("TTNumber",TTNumber).whereEqualTo(Sno,Remarks).
+                .whereEqualTo("Date",Date).whereEqualTo("TTNumber",TTNumber).
                         get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -89,7 +105,7 @@ public class FireBaseHandler extends AppCompatActivity
         return doc;
     }
 
-   /* public void delete(String Date,String TTNumber) {
+    public void delete(String Date,String TTNumber) {
         FirebaseFirestore db=FirebaseFirestore.getInstance();
         FirebaseFirestore.getInstance().collection("Calibration").document(TTNumber+"_"+Date).delete().
                 addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -98,7 +114,7 @@ public class FireBaseHandler extends AppCompatActivity
                         Log.d("Document", "ok");
                     }
                 });
-    }*/
+    }
 
     public void Update(String Date,String TTNumber, String Sno,String Remarks) {
         DocumentReference doc=FirebaseFirestore.getInstance().collection("Calibration").

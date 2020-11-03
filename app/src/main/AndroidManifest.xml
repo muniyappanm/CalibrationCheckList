@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CalibrationCheckList">
-        <activity android:name=".ExampleItem"></activity>
+        <activity android:name=".ReportView"></activity>
         <activity android:name=".Report" />
         <activity android:name=".TTChecklist" />
         <activity android:name=".MenuActivity" />

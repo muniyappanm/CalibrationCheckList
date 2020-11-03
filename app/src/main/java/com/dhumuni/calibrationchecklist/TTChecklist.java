@@ -105,6 +105,19 @@ public class TTChecklist extends AppCompatActivity {
         });
 
     }
+    private void edititem() {
+                db.Add(ttnumber.getText().toString(),Date.getText().toString());
+                String[] Numbers=new ExampleItem().GetNumbers();
+                String [] Particulars=new ExampleItem().GetParticular();
+                mExampleItem.clear();
+                mRecyclerView.setLayoutManager(null);
+                buildRecyclerView();
+                for(int i=0;i<Numbers.length;i++) {
+                    mExampleItem.add(new ExampleItem(
+                            Numbers[i], Particulars[i], "", R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
+                }
+                addchecklist.setVisibility(View.INVISIBLE);
+            }
 
     // to initialise data from firestore.
     @Override
