@@ -54,7 +54,7 @@ public class Report extends AppCompatActivity {
                 SetDate(rbdate_date);
             }
         });
-        creport=findViewById(R.id.creport);
+        /*creport=findViewById(R.id.creport);
         fromdate=findViewById(R.id.fromdate);
         fromdate.setText(date_n);
         fromdate.setOnClickListener(new View.OnClickListener() {
@@ -71,14 +71,14 @@ public class Report extends AppCompatActivity {
             public void onClick(View v) {
                 SetDate(todate);
             }
-        });
+        });*/
         rbtt_ttnumber=findViewById(R.id.rbtt_ttnumber);
         btn_reportbytt=findViewById(R.id.btn_reportbytt);
         btn_reportbydate=findViewById(R.id.btn_reportbydate);
-        btn_customeport=findViewById(R.id.btn_customeport);
+       /* btn_customeport=findViewById(R.id.btn_customeport);*/
         ReportbyDate();
         ReportbyTT();
-        CustomReport();
+        /*CustomReport();*/
         View();
         AutoComplete(rbtt_ttnumber);
         
@@ -91,14 +91,14 @@ public class Report extends AppCompatActivity {
         reportbytt.setVisibility(View.VISIBLE);
         reportbydate.setVisibility(View.VISIBLE);
         rbdate_date.setVisibility(View.VISIBLE);
-        creport.setVisibility(View.VISIBLE);
+        /*creport.setVisibility(View.VISIBLE);
         fromdate.setVisibility(View.VISIBLE);
         to.setVisibility(View.VISIBLE);
-        todate.setVisibility(View.VISIBLE);
+        todate.setVisibility(View.VISIBLE);*/
         rbtt_ttnumber.setVisibility(View.VISIBLE);
         btn_reportbytt.setVisibility(View.VISIBLE);
         btn_reportbydate.setVisibility(View.VISIBLE);
-        btn_customeport.setVisibility(View.VISIBLE);
+        /*btn_customeport.setVisibility(View.VISIBLE);*/
     }
 
     private void ReportbyDate() {
@@ -112,14 +112,14 @@ public class Report extends AppCompatActivity {
                 reportbytt.setVisibility(View.INVISIBLE);
                 reportbydate.setVisibility(View.INVISIBLE);
                 rbdate_date.setVisibility(View.INVISIBLE);
-                creport.setVisibility(View.INVISIBLE);
+               /* creport.setVisibility(View.INVISIBLE);
                 fromdate.setVisibility(View.INVISIBLE);
                 to.setVisibility(View.INVISIBLE);
-                todate.setVisibility(View.INVISIBLE);
+                todate.setVisibility(View.INVISIBLE);*/
                 rbtt_ttnumber.setVisibility(View.INVISIBLE);
                 btn_reportbytt.setVisibility(View.INVISIBLE);
                 btn_reportbydate.setVisibility(View.INVISIBLE);
-                btn_customeport.setVisibility(View.INVISIBLE);
+               /* btn_customeport.setVisibility(View.INVISIBLE);*/
             }
         });
     }
@@ -135,14 +135,14 @@ public class Report extends AppCompatActivity {
                 reportbytt.setVisibility(View.INVISIBLE);
                 reportbydate.setVisibility(View.INVISIBLE);
                 rbdate_date.setVisibility(View.INVISIBLE);
-                creport.setVisibility(View.INVISIBLE);
+                /*creport.setVisibility(View.INVISIBLE);
                 fromdate.setVisibility(View.INVISIBLE);
                 to.setVisibility(View.INVISIBLE);
-                todate.setVisibility(View.INVISIBLE);
+                todate.setVisibility(View.INVISIBLE);*/
                 rbtt_ttnumber.setVisibility(View.INVISIBLE);
                 btn_reportbytt.setVisibility(View.INVISIBLE);
                 btn_reportbydate.setVisibility(View.INVISIBLE);
-                btn_customeport.setVisibility(View.INVISIBLE);
+               /* btn_customeport.setVisibility(View.INVISIBLE);*/
             }
         });
     }

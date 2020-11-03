@@ -36,6 +36,7 @@ public class TTChecklist extends AppCompatActivity {
 
     List<String> list = new ArrayList<String>();
     public String Remark;
+    ArrayList<String> Remarks=new ArrayList<>();
     public ArrayList<ExampleItem> mExampleItem=new ArrayList<>();
     private RecyclerView mRecyclerView;
     private ExampleAdapter mAdapter;
@@ -64,8 +65,6 @@ public class TTChecklist extends AppCompatActivity {
         buildRecyclerView();
         additem();
         addnewtt();
-        String date_n = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-        Date.setText(date_n);
         onSetDate();
     }
 
@@ -97,6 +96,8 @@ public class TTChecklist extends AppCompatActivity {
                 mRecyclerView.setLayoutManager(null);
                 buildRecyclerView();
                 for(int i=0;i<Numbers.length;i++) {
+                    db.AddChecklist(Numbers[i],"",
+                            ttnumber.getText().toString(),Date.getText().toString());
                     mExampleItem.add(new ExampleItem(
                             Numbers[i], Particulars[i], "", R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
                 }
@@ -106,15 +107,17 @@ public class TTChecklist extends AppCompatActivity {
 
     }
     private void edititem() {
-                db.Add(ttnumber.getText().toString(),Date.getText().toString());
                 String[] Numbers=new ExampleItem().GetNumbers();
                 String [] Particulars=new ExampleItem().GetParticular();
                 mExampleItem.clear();
                 mRecyclerView.setLayoutManager(null);
                 buildRecyclerView();
+                String[] re=new String[Remarks.size()];
+                int a=0;
+                for (String j:Remarks) { re[a]=j;a++;}
                 for(int i=0;i<Numbers.length;i++) {
                     mExampleItem.add(new ExampleItem(
-                            Numbers[i], Particulars[i], "", R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
+                            Numbers[i], Particulars[i], re[i], R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
                 }
                 addchecklist.setVisibility(View.INVISIBLE);
             }
@@ -123,6 +126,22 @@ public class TTChecklist extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Intent intent=getIntent();
+        if (intent.getStringExtra("Date")!=null||intent.getStringExtra("TTNumber")!=null)
+        {
+            String tt=intent.getStringExtra("TTNumber");
+            String date=intent.getStringExtra("Date");
+            Date.setText(date);
+            ttnumber.setText(tt);
+            ViewOne(tt,date);
+            edititem();
+        }
+        else {
+            String date_n = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+            Date.setText(date_n);
+        }
+
+
     }
     public void changeItem(int position, String Remarks) {
         mExampleItem.get(position).changeText(Remarks);
@@ -199,5 +218,26 @@ public class TTChecklist extends AppCompatActivity {
             }
         });
 
+    }
+    void ViewOne(String  TTNumber,String Date){
+        Task<QuerySnapshot> data=null;
+        Remarks.clear();
+        data=db.ViewOne(Date,TTNumber);
+        if(data.getResult().isEmpty())
+        {
+            //showMessage("Error","Nothing found");
+            return;
+        }
+        String[] Numbers=new ExampleItem().GetNumbers();
+        for (QueryDocumentSnapshot Qdoc:data.getResult())
+        {
+            Map<String ,Object> Mlist=null;
+            Mlist= Qdoc.getData();
+            for(int j=0;j<Numbers.length;j++)
+            {
+                Remarks.add(Mlist.get(Numbers[j]).toString());
+            }
+        }
+        data=null;
     }
 }

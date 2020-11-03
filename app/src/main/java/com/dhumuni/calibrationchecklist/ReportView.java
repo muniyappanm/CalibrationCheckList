@@ -90,7 +90,29 @@ public class ReportView extends AppCompatActivity {
         {
             @Override
             public void onItemEdit(int position, TextView Data) {
-
+                Intent intent=getIntent();
+                String Date="",TTNumber="";
+          /*if (intent.getStringExtra("ChecklistDate")==null&&intent.getStringExtra("TTNumber")==null)
+        {
+            setTitle("TT's Checked from "+intent.getStringExtra("FromDate")+"to "+intent.getStringExtra("ToDate"));
+        }
+        else*/ if (intent.getStringExtra("ChecklistDate")==null)
+                {
+                    String tt=intent.getStringExtra("TTNumber");
+                    String date=Data.getText().toString();
+                    Date=date;
+                    TTNumber=tt;
+                }
+                else {
+                    String date=intent.getStringExtra("ChecklistDate");
+                    String tt=Data.getText().toString();
+                    Date=date;
+                    TTNumber=tt;
+                }
+                Intent in=new Intent(ReportView.this,TTChecklist.class);
+                in.putExtra("TTNumber",TTNumber);
+                in.putExtra("Date",Date);
+                startActivity(in);
             }
 
             @Override
