@@ -14,7 +14,7 @@ public class ExampleItem {
     }
 
     public ExampleItem() {
-            Particular= new String[]{"WHETHER TT CALIBRATION AT IOC SANKARI TERMINAL IS DUE?",
+            Particular= new String[]{"WHETHER TT CALIBRATION AT IOC SALEM TERMINAL IS DUE?",
                     "WHETHER IOC NEW COLOUR CODING PAINTED?",
                     "IS TT MFG ON & AFTER 01.10.2006 IF YES WHETHER ABS BREAK SYSTEM IS PROVIDED? (ANY LOCK BRAKE SYSTEM) YEAR OF MFG",
                     "WHETHER THE TANK /COMPARTMENT DIMENSIONS ARE MATCHING WITH EXPLOSIVE DRAWING?",
