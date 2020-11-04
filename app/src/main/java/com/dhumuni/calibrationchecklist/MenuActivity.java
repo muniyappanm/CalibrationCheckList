@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MenuActivity extends AppCompatActivity {
     Button ttchecklist,report,logout;
     TextView loading;
+    ImageView budget_imageview;
     FireBaseHandler db=new FireBaseHandler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class MenuActivity extends AppCompatActivity {
         report=(Button)findViewById(R.id.button_report);
         loading=(TextView)findViewById(R.id.loading);
         logout=findViewById(R.id.button_logout);
+        budget_imageview=findViewById(R.id.budget_imageview);
         TTChecklist();
         Report();
         Logout();
@@ -71,6 +73,7 @@ public class MenuActivity extends AppCompatActivity {
         ttchecklist.setVisibility(View.VISIBLE);
         report.setVisibility(View.VISIBLE);
         logout.setVisibility(View.VISIBLE);
+        budget_imageview.setVisibility(View.VISIBLE);
         loading.setVisibility(View.INVISIBLE);
     }
 
@@ -81,6 +84,7 @@ public class MenuActivity extends AppCompatActivity {
                 Intent in = new Intent(MenuActivity.this, TTChecklist.class);
                 startActivity(in);
                 ttchecklist.setVisibility(View.INVISIBLE);
+                budget_imageview.setVisibility(View.INVISIBLE);
                 report.setVisibility(View.INVISIBLE);
                 logout.setVisibility(View.INVISIBLE);
                 loading.setVisibility(View.VISIBLE);
@@ -91,6 +95,11 @@ public class MenuActivity extends AppCompatActivity {
         report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ttchecklist.setVisibility(View.INVISIBLE);
+                budget_imageview.setVisibility(View.INVISIBLE);
+                report.setVisibility(View.INVISIBLE);
+                logout.setVisibility(View.INVISIBLE);
+                loading.setVisibility(View.VISIBLE);
                 startActivity(new Intent(MenuActivity.this,Report.class));
             }
         });
