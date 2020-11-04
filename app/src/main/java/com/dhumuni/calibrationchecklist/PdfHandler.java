@@ -33,8 +33,8 @@ public class PdfHandler extends AppCompatActivity {
     TextView tv_sub_title;
     TextView tv_location;
     TextView tv_city;
-
-
+    PdfDocument.PageInfo myPageInfo;
+    PdfDocument.Page documentPage;
     String file_name_path = "";
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {
@@ -49,10 +49,8 @@ public class PdfHandler extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdfhandler);
-
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-
         if (!hasPermissions(PdfHandler.this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(PdfHandler.this, PERMISSIONS, PERMISSION_ALL);
         }
@@ -61,14 +59,11 @@ public class PdfHandler extends AppCompatActivity {
         if (!file.exists()) {
             file.mkdir();
         }
-
         btnCreatePdf = findViewById(R.id.btnCreatePdf);
         tv_title = findViewById(R.id.tv_title);
         tv_sub_title = findViewById(R.id.tv_sub_title);
         tv_location = findViewById(R.id.tv_location);
         tv_city = findViewById(R.id.tv_city);
-
-
         btnCreatePdf.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -79,83 +74,84 @@ public class PdfHandler extends AppCompatActivity {
 
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void createpdf() {
         Rect bounds = new Rect();
-        int pageWidth = 300;
-        int pageheight = 470;
+        int pageWidth = 420;
+        int pageheight = 594;
         int pathHeight = 2;
 
-        final String fileName = "mypdf";
+        final String fileName = "Report1" +
+                "";
         file_name_path = "/pdfsdcard_location/" + fileName + ".pdf";
         PdfDocument myPdfDocument = new PdfDocument();
         Paint paint = new Paint();
         Paint paint2 = new Paint();
         Path path = new Path();
-        PdfDocument.PageInfo myPageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageheight, 1).create();
-        PdfDocument.Page documentPage = myPdfDocument.startPage(myPageInfo);
-        Canvas canvas = documentPage.getCanvas();
-        int y = 25; // x = 10,
-        int x = 10;
+        for(int i=1;i<3;i++){
+            myPageInfo= new PdfDocument.PageInfo.Builder(pageWidth, pageheight, i).create();
+            documentPage = myPdfDocument.startPage(myPageInfo);
+            Canvas canvas = documentPage.getCanvas();
+            int y = 25; // x = 10,
+            int x = 10;
+            String muni="I am Muniyappan The X coordinate of the left";
+            paint.getTextBounds(muni, 0, muni.length(), bounds);
+            /*paint.getTextBounds(tv_title.getText().toString(), 0, tv_title.getText().toString().length(), bounds);*/
+            x = (canvas.getWidth() / 2) - (bounds.width() / 2);
+            canvas.drawText(muni, x, y, paint);
+            /*canvas.drawText(tv_title.getText().toString(), x, y, paint);*/
 
-        paint.getTextBounds(tv_title.getText().toString(), 0, tv_title.getText().toString().length(), bounds);
-        x = (canvas.getWidth() / 2) - (bounds.width() / 2);
-        canvas.drawText(tv_title.getText().toString(), x, y, paint);
+            paint.getTextBounds(tv_sub_title.getText().toString(), 0, tv_sub_title.getText().toString().length(), bounds);
+            x = (canvas.getWidth() / 2) - (bounds.width() / 2);
+            y += paint.descent() - paint.ascent();
+            canvas.drawText(tv_sub_title.getText().toString(), x, y, paint);
 
-        paint.getTextBounds(tv_sub_title.getText().toString(), 0, tv_sub_title.getText().toString().length(), bounds);
-        x = (canvas.getWidth() / 2) - (bounds.width() / 2);
-        y += paint.descent() - paint.ascent();
-        canvas.drawText(tv_sub_title.getText().toString(), x, y, paint);
-
-        y += paint.descent() - paint.ascent();
-        canvas.drawText("", x, y, paint);
-
-//horizontal line
-        path.lineTo(pageWidth, pathHeight);
-        paint2.setColor(Color.GRAY);
-        paint2.setStyle(Paint.Style.STROKE);
-        path.moveTo(x, y);
-
-        canvas.drawLine(0, y, pageWidth, y, paint2);
-
-//blank space
-        y += paint.descent() - paint.ascent();
-        canvas.drawText("", x, y, paint);
-
-        y += paint.descent() - paint.ascent();
-        x = 10;
-        canvas.drawText(tv_location.getText().toString(), x, y, paint);
-
-        y += paint.descent() - paint.ascent();
-        x = 10;
-        canvas.drawText(tv_city.getText().toString(), x, y, paint);
-
-//blank space
-        y += paint.descent() - paint.ascent();
-        canvas.drawText("", x, y, paint);
+            y += paint.descent() - paint.ascent();
+            canvas.drawText("", x, y, paint);
 
 //horizontal line
-        path.lineTo(pageWidth, pathHeight);
-        paint2.setColor(Color.GRAY);
-        paint2.setStyle(Paint.Style.STROKE);
-        path.moveTo(x, y);
-        canvas.drawLine(0, y, pageWidth, y, paint2);
+            path.lineTo(pageWidth, pathHeight);
+            paint2.setColor(Color.GRAY);
+            paint2.setStyle(Paint.Style.STROKE);
+            path.moveTo(x, y);
+
+            canvas.drawLine(0, y, pageWidth, y, paint2);
 
 //blank space
-        y += paint.descent() - paint.ascent();
-        canvas.drawText("", x, y, paint);
+            y += paint.descent() - paint.ascent();
+            canvas.drawText("", x, y, paint);
 
-        Resources res = getResources();
-        Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.iocl);
-        Bitmap b = (Bitmap.createScaledBitmap(bitmap, 100, 50, false));
-        canvas.drawBitmap(b, x, y, paint);
-        y += 25;
-        canvas.drawText(getString(R.string.app_name), 120, y, paint);
+            y += paint.descent() - paint.ascent();
+            x = 10;
+            canvas.drawText(tv_location.getText().toString(), x, y, paint);
 
+            y += paint.descent() - paint.ascent();
+            x = 10;
+            canvas.drawText(tv_city.getText().toString(), x, y, paint);
 
-        myPdfDocument.finishPage(documentPage);
+//blank space
+            y += paint.descent() - paint.ascent();
+            canvas.drawText("", x, y, paint);
 
+//horizontal line
+            path.lineTo(pageWidth, pathHeight);
+            paint2.setColor(Color.GRAY);
+            paint2.setStyle(Paint.Style.STROKE);
+            path.moveTo(x, y);
+            canvas.drawLine(0, y, pageWidth, y, paint2);
+
+//blank space
+            y += paint.descent() - paint.ascent();
+            canvas.drawText("", x, y, paint);
+            Resources res = getResources();
+            Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.iocl);
+            Bitmap b = (Bitmap.createScaledBitmap(bitmap, 100, 50, false));
+            canvas.drawBitmap(b, x, y, paint);
+            y += 25;
+            canvas.drawText(getString(R.string.app_name), 120, y, paint);
+            myPdfDocument.finishPage(documentPage);
+
+        }
         File file = new File(this.getExternalFilesDir(null).getAbsolutePath() + file_name_path);
         try {
             myPdfDocument.writeTo(new FileOutputStream(file));
@@ -168,10 +164,11 @@ public class PdfHandler extends AppCompatActivity {
     }
 
     public void viewPdfFile() {
-
         File file = new File(this.getExternalFilesDir(null).getAbsolutePath() + file_name_path);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+        Uri test=Uri.parse("file://"+file);
+        intent.setDataAndType(test, "application/pdf");
+        /*intent.setDataAndType(Uri.fromFile(file), "application/pdf");*/
         startActivity(intent);
     }
 
