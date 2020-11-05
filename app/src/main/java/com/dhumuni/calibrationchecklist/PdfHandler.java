@@ -75,26 +75,22 @@ public class PdfHandler extends AppCompatActivity {
 
     }
     public void Display(Rect bounds,String st,Canvas canvas,int y,Paint paint,int warplength){
-        if(canvas.getWidth()>bounds.width()) canvas.drawText(st.replace("$%"," ").trim(), 20, y, paint);
-        else {
+        /*if(canvas.getWidth()>bounds.width()) canvas.drawText(st.replace("$%"," ").trim(), 20, y, paint);
+        else {*/
+             ArrayList<String > list=new ArrayList<>();
             st=st.replaceAll(" ","~!");
-            String sub;
-            for(int i=0;i<warplength;i++){
-                int a;
-                int b;
-                int c;
-                a=canvas.getWidth();
-                b=bounds.width();
-                c=st.length();
-                int add=(int)(Math.floor(c*a/b));
-                if(warplength<=add)
-                         sub=st.substring(0,-warplength+i+add);
-                else sub=st.substring(0,1);
-
-
-               /* if(warplength<=st.length())
-                sub=st.substring(0,(-warplength+i+add));*/
-
+            String sub =st.substring(0,100);
+            for(int i=0;i<10;i++){
+                double canvaswidth,boundswidth,stlength;
+                canvaswidth=canvas.getWidth()+0.0;
+                boundswidth=bounds.width()+0.0;
+                stlength=st.length()+0.0;
+                int add=(int)(Math.floor(stlength*canvaswidth/boundswidth));
+                if(warplength<=add&&warplength<st.length()) sub=st.substring(0,-warplength+i+add);
+                else if(warplength>=st.length()){
+                    sub=st;
+                }
+                else sub=st.substring(0,-warplength+i+st.length());
                 if(sub.endsWith("~!"))  {
                     sub=sub.replaceAll("~!"," ").trim();
                     canvas.drawText(sub, 20, y, paint);
@@ -111,7 +107,7 @@ public class PdfHandler extends AppCompatActivity {
                 }
             }
         }
-    }
+ /*   }*/
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void createpdf() {
