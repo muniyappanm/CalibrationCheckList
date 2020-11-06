@@ -32,6 +32,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class PdfHandler extends AppCompatActivity {
+    int warplength=40;
+   int forwardY=0;
+    ArrayList<String > list=new ArrayList<>();
+    ArrayList<String > Storage=new ArrayList<>();
+    ExampleItem exampleItem=new ExampleItem();
+    boolean testing=true;
+    int count=1;
+    String Max = null;
+    int Listcall=0;
+    int Storagecall=0;
+    int Maxlength=0;
     Button btnCreatePdf;
     TextView tv_title;
     TextView tv_sub_title;
@@ -74,40 +85,55 @@ public class PdfHandler extends AppCompatActivity {
         });
 
     }
-    public void Display(Rect bounds,String st,Canvas canvas,int y,Paint paint,int warplength){
-        /*if(canvas.getWidth()>bounds.width()) canvas.drawText(st.replace("$%"," ").trim(), 20, y, paint);
-        else {*/
-             ArrayList<String > list=new ArrayList<>();
-            st=st.replaceAll(" ","~!");
-            String sub =st.substring(0,100);
-            for(int i=0;i<10;i++){
-                double canvaswidth,boundswidth,stlength;
-                canvaswidth=canvas.getWidth()+0.0;
-                boundswidth=bounds.width()+0.0;
-                stlength=st.length()+0.0;
-                int add=(int)(Math.floor(stlength*canvaswidth/boundswidth));
-                if(warplength<=add&&warplength<st.length()) sub=st.substring(0,-warplength+i+add);
-                else if(warplength>=st.length()){
-                    sub=st;
-                }
-                else sub=st.substring(0,-warplength+i+st.length());
-                if(sub.endsWith("~!"))  {
-                    sub=sub.replaceAll("~!"," ").trim();
-                    canvas.drawText(sub, 20, y, paint);
-                    st= st.replaceAll("~!"," ");
-                    st=st.replace(sub,"").trim();
-                    y += paint.descent() - paint.ascent();
-                    Rect bound = new Rect();
-                    paint.getTextBounds(st,0,st.length(),bound);
-                    Display(bound,st,canvas,y,paint,warplength);
-                }
-                else if(sub.endsWith("$%")){
-                    sub=sub.replaceAll("~!"," ");
-                    sub=sub.replace("$%","").trim();
+
+    public void Display(String st,int warplength) {
+        if (testing) {
+            st = st.replaceAll(" ", "~!");
+            String sub = "";
+            for (int i = 0; i < warplength; i++) {
+                if (st.length() > warplength)
+                    sub = st.substring(0, warplength - i);
+                else sub = st;
+                if (sub.endsWith("~!")) {
+                    sub = sub.replaceAll("~!", " ").trim();
+                    if(Storagecall==0) list.add(sub);
+                    else Storage.add(sub);
+                    st = st.replaceAll("~!", " ");
+                    st = st.replace(sub, "").trim();
+                    Display(st, warplength);
+                } else if (sub.endsWith("$%")&& count==1){
+                    count=count+1;
+                    sub = sub.replaceAll("~!", " ");
+                    sub = sub.replace("$%", "").trim();
+                    if(Storagecall==0) list.add(sub);
+                    else Storage.add(sub);
+                    break;
                 }
             }
         }
+        testing=false;
+        return;
+    }
  /*   }*/
+public String Max(int warplength){
+    for(int i=0;i<exampleItem.GetNumbers().length;i++) {
+        String[] Particulars = exampleItem.GetParticular();
+        String st = Particulars[i] + "$%";
+        testing=true;
+        count=1;
+        Storagecall=1;
+        Listcall=0;
+        Display(st, warplength);
+        for (String x:Storage) {
+            if(Maxlength<x.length()){
+                Max=x;
+                Maxlength=x.length();
+            }
+        }
+    }
+    return Max;
+}
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void createpdf() {
@@ -115,33 +141,134 @@ public class PdfHandler extends AppCompatActivity {
         int pageWidth = 595;
         int pageheight = 842;
         int pathHeight = 2;
-
-        final String fileName = "Report";
+        String[] numbers, Particulars;
+        numbers = exampleItem.GetNumbers();
+        Particulars = exampleItem.GetParticular();
+        final String fileName = "Report1";
         file_name_path = "/pdfsdcard_location/" + fileName + ".pdf";
         PdfDocument myPdfDocument = new PdfDocument();
         Paint paint = new Paint();
         Paint paint2 = new Paint();
+        paint2.setColor(Color.BLACK);
+        paint2.setStyle(Paint.Style.STROKE);
+        paint2.setTextSize(20.0f);
         Path path = new Path();
         int page=1;
-            myPageInfo= new PdfDocument.PageInfo.Builder(pageWidth, pageheight,page).create();
-            documentPage = myPdfDocument.startPage(myPageInfo);
-            Canvas canvas = documentPage.getCanvas();
-            int y = 50; // x = 10,
-            int x = 0;
-            ExampleItem exampleItem=new ExampleItem();
-            String[] numbers,Particulars;
-            numbers=exampleItem.GetNumbers();
-            Particulars=exampleItem.GetParticular();
-            String st="The longest word in any of the major English language dictionaries is pne, " +
-                    "a word that refers to a lung disease contracted " +
-                    "from the inhalation of very fine silica particles, specifically from a volcano; medically, it is the same as silicosis"+"$%";
-            /*String st=numbers[0]+" "+Particulars[0]+"$%";*/
-            paint.getTextBounds(st,0,st.length(),bounds);
-            double a,b,c;
-            a=canvas.getWidth();
-            b=bounds.width();
-            c=st.length();
-           Display(bounds,st,canvas,y,paint,100);
+        int InitialY=0;
+        int y=100;
+        myPageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageheight, page).create();
+        documentPage = myPdfDocument.startPage(myPageInfo);
+        Canvas canvas = documentPage.getCanvas();
+        canvas.drawLine(0,y,pageWidth,y,paint2);
+        Resources res = getResources();
+        Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.iocllogo);
+        Bitmap b = (Bitmap.createScaledBitmap(bitmap, 80, 80, false));
+        canvas.drawBitmap(b, 10, 10, paint);
+        paint2.setTextSize(20.0f);
+        String Checklist="CHECK LIST FOR CALIBRATION OT TT UNDER CONTRACTOR AT SALEM TERMINAL";
+        String IoclNAme="INDIAN OIL CORPORATION LIMITED, ";
+        String PlantName=" SALEM TERMINAL.";
+        String WorkOrderNo="WO.NO.REF.TNSO/OPS/POL/MSHSD/4150/2016-21";
+        String Transporter="THE TRANSPORTER/DEALER: ";
+        String TTNumber="TT REGISTRATION NUMBER: ";
+        String DateofChecking="DATE OF CHECKING: ";
+        String Capacity="CAPACITY OF TT  (IN KL): ";
+        canvas.drawText(IoclNAme,100,50,paint2);
+        paint2.getTextBounds(IoclNAme,0,IoclNAme.length(),bounds);
+        paint2.setTextSize(16.0f);
+        canvas.drawText(PlantName,100+bounds.width(),50,paint2);
+        paint2.setTextSize(10.0f);
+        canvas.drawText(Checklist,90,75,paint2);
+        canvas.drawText(WorkOrderNo,0,113,paint2);
+        paint2.getTextBounds(WorkOrderNo,0,WorkOrderNo.length(),bounds);
+        canvas.drawText(DateofChecking,bounds.width()+100,113,paint2);
+        canvas.drawLine(0,115,pageWidth,115,paint2);
+        y += paint.descent() - paint.ascent();
+        canvas.drawText(Transporter,0,y+13,paint2);
+        canvas.drawLine(0,y+15,pageWidth,y+15,paint2);
+        y += paint.descent() - paint.ascent();
+        canvas.drawText(TTNumber,0,y+13,paint2);
+        paint2.getTextBounds(WorkOrderNo,0,WorkOrderNo.length(),bounds);
+        canvas.drawText(Capacity,bounds.width()+100,y+13,paint2);
+        canvas.drawLine(0,y+15,pageWidth,y+15,paint2);
+        y += paint.descent() - paint.ascent();
+        InitialY=y;
+        paint2.setTextSize(20.0f);
+        y += paint.descent() - paint.ascent();
+        canvas.drawLine(0,y+40,pageWidth,y+40,paint2);
+        paint.getTextBounds(Max(warplength),0,Max(warplength).length(),bounds);
+        int start=bounds.width();
+        canvas.drawText("S.No",0,y+25,paint2);
+        canvas.drawText("PARTICULARS",43+25,y+25,paint2);
+        canvas.drawText("YES",start+46+5,y+25,paint2);
+        canvas.drawText("NO",start+100+5,y+25,paint2);
+        canvas.drawText("REMARKS",start+154+25,y+25,paint2);
+        y+=40;
+        y += paint.descent() - paint.ascent();
+        int countsno=0;
+        for(int i=0;i<exampleItem.GetNumbers().length;i++) {
+            boolean firsttime=true;
+            String st = Particulars[i] + "$%";
+            list.clear();
+            count=1;
+            testing=true;
+            Storagecall=0;
+            Listcall=1;
+            Display(st, warplength);
+            y=y+10;
+            for (String txt : list) {
+                if(y>pageheight) {
+                    y=20;
+                    page+=1;
+                    myPdfDocument.finishPage(documentPage);
+                    myPageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageheight, page).create();
+                    documentPage = myPdfDocument.startPage(myPageInfo);
+                    canvas = documentPage.getCanvas();
+                }
+                canvas.drawText(txt, 45, y, paint);
+                forwardY=y;
+                if(firsttime){
+                    canvas.drawText(numbers[countsno], 20, y, paint);
+                    countsno+=1;
+                    firsttime=false;
+                }
+                y += paint.descent() - paint.ascent();
+
+            } 
+            canvas.drawLine(0, y-10, pageWidth, y-10, paint2);
+            paint.getTextBounds(Max(warplength),0,Max(warplength).length(),bounds);
+            start=bounds.width();
+            String max=Max(warplength);
+            if(page==1){
+                canvas.drawLine(43, InitialY, 43, y+10, paint2);
+                canvas.drawLine(start+46, InitialY, start+46, y+10, paint2);
+                canvas.drawLine(start+100, InitialY, start+100, y+10, paint2);
+                canvas.drawLine(start+154, InitialY, start+154, y+10, paint2);
+            }
+            else {
+                canvas.drawLine(43, 0, 43, y+10, paint2);
+                canvas.drawLine(start+46, 0, start+46, y+10, paint2);
+                canvas.drawLine(start+100, 0, start+100, y+10, paint2);
+                canvas.drawLine(start+154, 0, start+154, y+10, paint2);
+            }
+
+            canvas.drawLine(0,0,0,pageheight,paint2);
+            canvas.drawLine(pageWidth,0,pageWidth,pageheight,paint2);
+            canvas.drawLine(0,0,pageWidth,0,paint2);
+            canvas.drawLine(0,pageheight,pageWidth,pageheight,paint2);
+
+        }
+        y=forwardY;
+        canvas.drawLine(0,y+60,pageWidth,y+60,paint2);
+        canvas.drawText("REMARKS IF ANY: ", 1, y+20, paint);
+        y += paint.descent() - paint.ascent();
+        canvas.drawLine(0,y+100,pageWidth,y+100,paint2);
+        String Fit="TT IS FIT FOR INDUCTION/FC/CALIBRATION: ";
+        canvas.drawText(Fit, 0, y+100-10, paint);
+        paint.getTextBounds(Fit,0,Fit.length(),bounds);
+        canvas.drawText("YES/NO", bounds.width()+5, y+100-10, paint);
+        canvas.drawText("OFFICER SIGNATURE", bounds.width()+200, y+100-10, paint);
+
         /*    paint.getTextBounds(tv_sub_title.getText().toString(), 0, tv_sub_title.getText().toString().length(), bounds);
             x = (canvas.getWidth() / 2) - (bounds.width() / 2);
             y += paint.descent() - paint.ascent();
@@ -155,7 +282,6 @@ public class PdfHandler extends AppCompatActivity {
             paint2.setColor(Color.GRAY);
             paint2.setStyle(Paint.Style.STROKE);
             path.moveTo(x, y);
-
             canvas.drawLine(0, y, pageWidth, y, paint2);
 
 //blank space
@@ -190,7 +316,7 @@ public class PdfHandler extends AppCompatActivity {
             canvas.drawBitmap(b, x, y, paint);
             y += 25;
             canvas.drawText(getString(R.string.app_name), 120, y, paint);*/
-            myPdfDocument.finishPage(documentPage);
+        myPdfDocument.finishPage(documentPage);
         File file = new File(this.getExternalFilesDir(null).getAbsolutePath() + file_name_path);
         try {
             myPdfDocument.writeTo(new FileOutputStream(file));
