@@ -403,7 +403,7 @@ public class ReportView extends AppCompatActivity {
         canvas.drawText("REMARKS",start+154+25,y+8,paint2);
         y += paint.descent() - paint.ascent();
         int countsno=0;
-        for(int i=0;i<exampleItem.GetNumbers().length;i++) {
+        for(int i=0;i<exampleItem.GetNumbers().length-1;i++) {
             boolean firsttime=true;
             String st = Particulars[i] + "$%";
             list.clear();
@@ -464,6 +464,19 @@ public class ReportView extends AppCompatActivity {
         y=forwardY;
         canvas.drawLine(0,y+80,start+154,y+80,paint2);
         canvas.drawText("REMARKS IF ANY: ", 1, y+20, paint);
+        y += paint.descent() - paint.ascent();
+        list.clear();
+        count=1;
+        testing=true;
+        Storagecall=0;
+        Listcall=1;
+        String re=(String) Remarks.get(numbers[39])+"$%";
+        Display(re, 80);
+        y=y+20;
+        for (String txt : list) {
+            canvas.drawText(txt, 10, y, paint);
+            y += paint.descent() - paint.ascent();
+        }
         y += paint.descent() - paint.ascent();
         canvas.drawLine(0,y+100,pageWidth,y+100,paint2);
         canvas.drawLine(start+154, forwardY, start+154, y+100, paint2);
