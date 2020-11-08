@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -49,7 +50,9 @@ import java.util.Objects;
 public class ReportView extends AppCompatActivity {
     String capacity;
     String transporter;
-    int warplength=40;
+    String Ecno;
+    String Employee_Name;
+    int warplength=52;
     int forwardY=0;
     ArrayList<String > list=new ArrayList<>();
     Map<String ,Object> Remarks=new ArrayMap<>();
@@ -62,11 +65,6 @@ public class ReportView extends AppCompatActivity {
     int Listcall=0;
     int Storagecall=0;
     int Maxlength=0;
-    Button btnCreatePdf;
-    TextView tv_title;
-    TextView tv_sub_title;
-    TextView tv_location;
-    TextView tv_city;
     PdfDocument.PageInfo myPageInfo;
     PdfDocument.Page documentPage;
     String file_name_path = "";
@@ -74,7 +72,6 @@ public class ReportView extends AppCompatActivity {
     String[] PERMISSIONS = {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,};
-    PdfHandler pdfHandler=new PdfHandler();
     public ArrayList<ReportItem> mReportItem=new ArrayList<>();
     private RecyclerView mRecyclerView;
     private ReportItemAdapter mAdapter;
@@ -298,6 +295,19 @@ public class ReportView extends AppCompatActivity {
         testing=false;
         return;
     }
+    public void EmployeeDetail(){
+        Task<DocumentSnapshot> data=null;
+        data=db.ViewEmployeeDetail();
+        DocumentSnapshot document = data.getResult();
+        if(document.getString("Name").isEmpty())
+        {
+            //showMessage("Error","Nothing found");
+            return;
+        }
+        Employee_Name=document.getString("Name");
+        Ecno=document.getString("ecnumber");
+        data=null;
+        }
     /*   }*/
     public String Max(int warplength){
         for(int i=0;i<exampleItem.GetNumbers().length;i++) {
@@ -320,6 +330,7 @@ public class ReportView extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void createpdf(String Date,String TTNo) {
         ViewOne(Date,TTNo);
+        EmployeeDetail();
         Rect bounds = new Rect();
         int pageWidth = 595;
         int pageheight = 842;
@@ -349,7 +360,7 @@ public class ReportView extends AppCompatActivity {
         Bitmap b = (Bitmap.createScaledBitmap(bitmap, 80, 70,false ));
         canvas.drawBitmap(b, 10, 5, paint);
         paint2.setTextSize(20.0f);
-        String Checklist="CHECK LIST FOR CALIBRATION OT TT UNDER CONTRACTOR AT SALEM TERMINAL";
+        String Checklist="CHECK LIST FOR CALIBRATION OF TT UNDER CONTRACTOR AT SALEM TERMINAL";
         String IoclNAme="INDIAN OIL CORPORATION LIMITED, ";
         String PlantNameHindi="इंडियन ऑयल कार्पोरेशन लिमिटेड, सेलम टर्मिनल.";
         String PlantName=" SALEM TERMINAL.";
@@ -400,7 +411,7 @@ public class ReportView extends AppCompatActivity {
         canvas.drawText("PARTICULARS",43+25,y+8,paint2);
         canvas.drawText("YES",start+46+5,y+8,paint2);
         canvas.drawText("NO",start+100+5,y+8,paint2);
-        canvas.drawText("REMARKS",start+154+25,y+8,paint2);
+        canvas.drawText("REMARKS",start+154+10,y+8,paint2);
         y += paint.descent() - paint.ascent();
         int countsno=0;
         for(int i=0;i<exampleItem.GetNumbers().length-1;i++) {
@@ -462,7 +473,7 @@ public class ReportView extends AppCompatActivity {
 
         }
         y=forwardY;
-        canvas.drawLine(0,y+80,start+154,y+80,paint2);
+        canvas.drawLine(0,y+80,start+46,y+80,paint2);
         canvas.drawText("REMARKS IF ANY: ", 1, y+20, paint);
         y += paint.descent() - paint.ascent();
         list.clear();
@@ -478,13 +489,32 @@ public class ReportView extends AppCompatActivity {
             y += paint.descent() - paint.ascent();
         }
         y += paint.descent() - paint.ascent();
-        canvas.drawLine(0,y+100,pageWidth,y+100,paint2);
-        canvas.drawLine(start+154, forwardY, start+154, y+100, paint2);
+        int Y=y+50;
+        canvas.drawLine(0,Y,pageWidth,Y,paint2);
+        canvas.drawLine(start+46, forwardY+3, start+46, Y, paint2);
         String Fit="TT IS FIT FOR INDUCTION/FC/CALIBRATION: ";
-        canvas.drawText(Fit, 0, y+100-10, paint);
-        canvas.drawText("YES/NO", start+20, y+100-10, paint);
-        canvas.drawText("SIGNATURE:", start+154, y+100-50, paint);
-        canvas.drawText("NAME:", start+154, y+100-10, paint);
+        canvas.drawText(Fit, 0, Y-10, paint);
+        paint.getTextBounds(Fit,0,Fit.length(),bounds);
+        canvas.drawText("YES/NO", bounds.width()+10, Y-10, paint);
+        String Name="NAME:";
+        String ECNO="EC NO:";
+        canvas.drawText(ECNO, start+46, Y-50, paint);
+        paint.getTextBounds(ECNO,0,ECNO.length(),bounds);
+        canvas.drawText(Ecno, start+46+bounds.width()+2, Y-50, paint);
+        canvas.drawText("SIGNATURE:", start+46, Y-80, paint);
+        canvas.drawText(Name, start+46, Y-30, paint);
+        paint.getTextBounds(Name,0,Name.length(),bounds);
+        list.clear();
+        count=1;
+        testing=true;
+        Storagecall=0;
+        Listcall=1;
+        String EName=Employee_Name+"$%";
+        Display(EName, 35);
+        for (String txt : list) {
+            canvas.drawText(txt, start+46+bounds.width()+2, y+50-30, paint);
+            y += paint.descent() - paint.ascent();
+        }
 
         /*    paint.getTextBounds(tv_sub_title.getText().toString(), 0, tv_sub_title.getText().toString().length(), bounds);
             x = (canvas.getWidth() / 2) - (bounds.width() / 2);

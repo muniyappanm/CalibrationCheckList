@@ -19,6 +19,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import org.w3c.dom.Document;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +63,23 @@ public class FireBaseHandler extends AppCompatActivity
                         Log.d("Document", "ok");
                     }
                 });
+        while (!doc.isComplete())
+            continue;
+        return doc;
+    }
+    public Task<DocumentSnapshot> ViewEmployeeDetail()
+    {
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        Task<DocumentSnapshot> doc=null;
+        Map<String ,Object> data= new HashMap<>();
+        FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+        doc= FirebaseFirestore.getInstance().collection("User").document(user.getUid()).
+                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+            }
+        });
         while (!doc.isComplete())
             continue;
         return doc;

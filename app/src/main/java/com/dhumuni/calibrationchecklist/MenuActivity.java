@@ -38,37 +38,12 @@ public class MenuActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(MenuActivity.this, PdfHandler.class);
-                startActivity(in);
-               /* FirebaseAuth.getInstance().signOut();
+                FirebaseAuth.getInstance().signOut();
                 Intent in = new Intent(MenuActivity.this, MainActivity.class);
                 startActivity(in);
-*/
             }
         });
     }
-
-    /*  @Override
-      public boolean onCreateOptionsMenu(Menu menu) {
-
-          getMenuInflater().inflate(R.menu.menu_scrolling,menu);
-          return true;
-
-      }
-
-      @Override
-      public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-          int id=item.getItemId();
-          switch (id){
-              case R.id.additem_menu:
-                  startActivity(new Intent(MenuActivity.this,AddItem.class));
-                  break;
-          }
-
-          return true;
-      }
-  */
     @Override
     protected void onStart() {
         super.onStart();

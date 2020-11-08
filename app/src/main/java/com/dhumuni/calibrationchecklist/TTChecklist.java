@@ -108,13 +108,16 @@ public class TTChecklist extends AppCompatActivity {
                 mExampleItem.clear();
                 mRecyclerView.setLayoutManager(null);
                 buildRecyclerView();
-                for(int i=0;i<Numbers.length;i++) {
+                for(int i=0;i<Numbers.length-1;i++) {
                     db.AddChecklist(Numbers[i],"",
                             ttnumber.getText().toString(),Date.getText().toString());
                     mExampleItem.add(new ExampleItem(
                             Numbers[i], Particulars[i], "", R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
                 }
-
+        db.AddChecklist(Numbers[39],"",
+                ttnumber.getText().toString(),Date.getText().toString());
+        mExampleItem.add(new ExampleItem(
+                Numbers[39], Particulars[39], "", R.drawable.ic_edit,R.drawable.ic_save));
 
     }
     private void edititem() {
@@ -126,10 +129,12 @@ public class TTChecklist extends AppCompatActivity {
                 String[] re=new String[Remarks.size()];
                 int a=0;
                 for (String j:Remarks) { re[a]=j;a++;}
-                for(int i=0;i<Numbers.length;i++) {
+                for(int i=0;i<Numbers.length-1;i++) {
                     mExampleItem.add(new ExampleItem(
                             Numbers[i], Particulars[i], re[i], R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
                 }
+               mExampleItem.add(new ExampleItem(
+                Numbers[39], Particulars[39], re[39], R.drawable.ic_edit,R.drawable.ic_save));
             }
 
     // to initialise data from firestore.
@@ -167,6 +172,16 @@ public class TTChecklist extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new ExampleAdapter.OnItemClickListener()
         {
             @Override
+            public void onItemEdit(int position, TextView Sno, EditText Remarks,ImageView yes, ImageView ok) {
+                db.AddChecklist(Sno.getText().toString(),Remarks.getText().toString(),
+                        ttnumber.getText().toString(),Date.getText().toString());
+                yes.setVisibility(View.INVISIBLE);
+                ok.setVisibility(View.VISIBLE);
+                Sno.setEnabled(false);
+                Remarks.setEnabled(true);
+            }
+
+            @Override
             public void onItemYes(int position, TextView Sno, EditText Remarks) {
                 db.AddChecklist(Sno.getText().toString(),"YES",
                         ttnumber.getText().toString(),Date.getText().toString());
@@ -187,9 +202,16 @@ public class TTChecklist extends AppCompatActivity {
             @Override
             public void onItemOk(int position, TextView Sno, EditText Remarks,ImageView yes, ImageView no, ImageView ok) {
                 Remark="NO: ";
-                changeItem(position,Remark+Remarks.getText().toString());
-                db.Update(Date.getText().toString(),ttnumber.getText().toString(),
-                        Sno.getText().toString(),Remark+Remarks.getText().toString());
+                if(position!=39){
+                    changeItem(position,Remark+Remarks.getText().toString());
+                    db.Update(Date.getText().toString(),ttnumber.getText().toString(),
+                            Sno.getText().toString(),Remark+Remarks.getText().toString());
+                }
+                else {
+                    changeItem(position,Remarks.getText().toString());
+                    db.Update(Date.getText().toString(),ttnumber.getText().toString(),
+                            Sno.getText().toString(),Remarks.getText().toString());
+                }
                 yes.setVisibility(View.VISIBLE);
                 no.setVisibility(View.VISIBLE);
                 ok.setVisibility(View.INVISIBLE);

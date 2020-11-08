@@ -38,16 +38,6 @@
         android:layout_below="@id/button_report"
         android:layout_marginTop="10dp"
         android:text="LogOut" />
-    <!--<Button
-        android:id="@+id/button_contact"
-        android:layout_width="200dp"
-        android:layout_below="@id/button_help"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Contact Us" />-->
     <TextView
         android:id="@+id/loading"
         android:layout_width="match_parent"

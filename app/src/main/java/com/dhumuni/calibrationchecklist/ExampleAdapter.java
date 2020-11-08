@@ -16,7 +16,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
     public interface OnItemClickListener {
         void onItemYes(int position, TextView Sno, EditText Remarks);
-
+        void onItemEdit(int position, TextView Sno, EditText Remarks,ImageView yes, ImageView ok);
         void onItemNo(int position, TextView Sno, EditText Remarks,ImageView yes, ImageView no, ImageView ok);
 
         void onItemOk(int position, TextView Sno, EditText Remarks,ImageView yes, ImageView no, ImageView ok);
@@ -58,7 +58,13 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
+                            if(position!=39)
                             listener.onItemYes(position,mSno,mRemarks);
+                            else {
+                                no.setVisibility(View.INVISIBLE);
+                                listener.onItemEdit(position,mSno, mRemarks,yes, ok);
+                            }
+
                         }
                     }
                 }
@@ -104,15 +110,31 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     @Override
     public void onBindViewHolder(ExampleViewHolder holder, int position) {
         ExampleItem currentItem = mExampleList.get(position);
-        holder.mSno.setText(currentItem.Sno());
-        holder.mParticulars.setText(currentItem.Particulars());
-        holder.mRemarks.setEnabled(false);
-        holder.mRemarks.setText(currentItem.getRemarks());
-        holder.mRemarks.setEnabled(false);
-        holder.yes.setImageResource(currentItem.getyes());
-        holder.no.setImageResource(currentItem.getno());
-        holder.ok.setImageResource(currentItem.getok());
-        holder.ok.setVisibility(View.INVISIBLE);
+        if(position==39){
+            holder.mSno.setText(currentItem.Sno());
+            holder.mParticulars.setText(currentItem.Particulars());
+            holder.mRemarks.setEnabled(false);
+            holder.mRemarks.setText(currentItem.getRemarks());
+            holder.mRemarks.setEnabled(false);
+            holder.yes.setImageResource(currentItem.getedit());
+            holder.ok.setImageResource(currentItem.getok());
+            holder.no.setImageResource(currentItem.getno());
+            holder.no.setVisibility(View.INVISIBLE);
+            holder.ok.setVisibility(View.INVISIBLE);
+        }
+        else {
+            holder.mSno.setText(currentItem.Sno());
+            holder.mParticulars.setText(currentItem.Particulars());
+            holder.mRemarks.setEnabled(false);
+            holder.mRemarks.setText(currentItem.getRemarks());
+            holder.mRemarks.setEnabled(false);
+            holder.yes.setImageResource(currentItem.getyes());
+            holder.no.setImageResource(currentItem.getno());
+            holder.ok.setImageResource(currentItem.getok());
+            holder.ok.setVisibility(View.INVISIBLE);
+
+        }
+
     }
 
     @Override

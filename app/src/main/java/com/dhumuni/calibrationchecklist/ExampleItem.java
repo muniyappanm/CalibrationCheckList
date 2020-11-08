@@ -1,7 +1,7 @@
 package com.dhumuni.calibrationchecklist;
 public class ExampleItem {
 
-    private int myes,mno,mok;
+    private int myes,mno,mok,medit;
     private String mSno,mParticulars,mRemarks;
     private  String[] Particular,Numbers;
     public ExampleItem(String Sno, String Particulars, String Remarks,int yes,int no,int ok) {
@@ -10,6 +10,13 @@ public class ExampleItem {
         mRemarks = Remarks;
         myes=yes;
         mno=no;
+        mok=ok;
+    }
+    public ExampleItem(String Sno, String Particulars, String Remarks,int edit,int ok) {
+        mSno = Sno;
+        mParticulars = Particulars;
+        mRemarks = Remarks;
+        medit=edit;
         mok=ok;
     }
 
@@ -65,8 +72,10 @@ public class ExampleItem {
     public String Particulars() {return mParticulars; }
     public String getRemarks() { return mRemarks;}
     public int getyes() {return myes; }
+    public int getedit() {return medit; }
     public int getno() { return mno;}
     public int getok() { return mok;}
+
     public void changeText(String Remarks) { mRemarks = Remarks; }
     public String[] GetParticular() { return Particular;}
     public String[] GetNumbers(){return Numbers; }
