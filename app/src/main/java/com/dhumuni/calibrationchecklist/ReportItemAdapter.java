@@ -14,7 +14,7 @@ public class ReportItemAdapter extends RecyclerView.Adapter<ReportItemAdapter.Ex
     public interface OnItemClickListener {
         void onItemEdit(int position, TextView Data);
         void onItemDelete(int position, TextView Data);
-
+        void onItemPrint(int position,TextView Data);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -25,12 +25,13 @@ public class ReportItemAdapter extends RecyclerView.Adapter<ReportItemAdapter.Ex
         public TextView Data;
         public ImageView edit;
         public ImageView delete;
+        public ImageView print;
         public ExampleViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             Data = itemView.findViewById(R.id.data);
             edit = itemView.findViewById(R.id.edit);
             delete = itemView.findViewById(R.id.delete);
-
+            print = itemView.findViewById(R.id.print);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -61,6 +62,17 @@ public class ReportItemAdapter extends RecyclerView.Adapter<ReportItemAdapter.Ex
                     }
                 }
             });
+            print.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemPrint(position,Data);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -81,6 +93,7 @@ public class ReportItemAdapter extends RecyclerView.Adapter<ReportItemAdapter.Ex
         holder.Data.setText(currentItem.getData());
         holder.edit.setImageResource(currentItem.getedit());
         holder.delete.setImageResource(currentItem.getdelete());
+        holder.print.setImageResource(currentItem.getprint());
     }
 
     @Override

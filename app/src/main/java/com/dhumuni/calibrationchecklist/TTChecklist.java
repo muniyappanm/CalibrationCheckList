@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,9 +49,7 @@ public class TTChecklist extends AppCompatActivity {
     int yyyy=c.get(Calendar.YEAR);
     int mm=c.get(Calendar.MONTH);
     int dd=c.get(Calendar.DAY_OF_MONTH);
-    TextView Date,TTNo;
-    EditText ttnumber;
-    ImageView addchecklist;
+    TextView Date,TTNo,ttnumber,cap,capacity;
     FloatingActionButton addnew;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,38 +57,52 @@ public class TTChecklist extends AppCompatActivity {
         setTitle("TT CheckList");
         setContentView(R.layout.activity_ttchecklist);
         Date=findViewById(R.id.textView_date);
-        TTNo=findViewById(R.id.textView_ttnumber);
-        ttnumber=findViewById(R.id.editText_ttnumber);
-        addchecklist=findViewById(R.id.addchecklist);
+        TTNo=findViewById(R.id.textView_ttno);
+        ttnumber=findViewById(R.id.textView_ttnumber);
+        TTNo=findViewById(R.id.textView_ttno);
+        cap=findViewById(R.id.textView_cap);
+        capacity=findViewById(R.id.textView_capacity);
         addnew=findViewById(R.id.addnew);
         buildRecyclerView();
-        additem();
-        addnewtt();
+        PopUp();
         onSetDate();
     }
 
-    private void addnewtt() {
+    private void PopUp() {
         addnew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mExampleItem.clear();
                 mRecyclerView.setLayoutManager(null);
                 buildRecyclerView();
-                addchecklist.setVisibility(View.VISIBLE);
                 ttnumber.setText("");
+                capacity.setText("");
+                Intent in = new Intent(TTChecklist.this, Popup.class);
+                startActivityForResult(in,1);
             }
         });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1)
+            if(resultCode==RESULT_OK)
+            {
+                buildRecyclerView();
+                assert data != null;
+                ttnumber.setText(data.getStringExtra("ttnumber"));
+                capacity.setText(data.getStringExtra("capacity"));
+                Map<String, Object> addData = new HashMap<>();
+                addData.put("TTNumber",ttnumber.getText().toString() );
+                addData.put("Date", Date.getText().toString());
+                addData.put("Transporter",data.getStringExtra("transporter"));
+                addData.put("Capacity", capacity.getText().toString());
+                db.Add(addData);
+                additem();
 
+            }
+    }
     private void additem() {
-        addchecklist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ttnumber.getText().toString().length()<6) {
-                    Toast.makeText(TTChecklist.this, "Please enter Valid TT No", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                db.Add(ttnumber.getText().toString(),Date.getText().toString());
                 String[] Numbers=new ExampleItem().GetNumbers();
                 String [] Particulars=new ExampleItem().GetParticular();
                 mExampleItem.clear();
@@ -101,9 +114,7 @@ public class TTChecklist extends AppCompatActivity {
                     mExampleItem.add(new ExampleItem(
                             Numbers[i], Particulars[i], "", R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
                 }
-                addchecklist.setVisibility(View.INVISIBLE);
-            }
-        });
+
 
     }
     private void edititem() {
@@ -119,7 +130,6 @@ public class TTChecklist extends AppCompatActivity {
                     mExampleItem.add(new ExampleItem(
                             Numbers[i], Particulars[i], re[i], R.drawable.ic_thumbup,R.drawable.ic_thumbdown,R.drawable.ic_save));
                 }
-                addchecklist.setVisibility(View.INVISIBLE);
             }
 
     // to initialise data from firestore.
@@ -233,6 +243,7 @@ public class TTChecklist extends AppCompatActivity {
         {
             Map<String ,Object> Mlist=null;
             Mlist= Qdoc.getData();
+            capacity.setText((String) Mlist.get("Capacity"));
             for(int j=0;j<Numbers.length;j++)
             {
                 Remarks.add(Mlist.get(Numbers[j]).toString());

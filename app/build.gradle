@@ -11,6 +11,7 @@ android {
         applicationId "com.dhumuni.calibrationchecklist"
         minSdkVersion 16
         targetSdkVersion 30
+        vectorDrawables.useSupportLibrary = true
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

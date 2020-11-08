@@ -24,12 +24,9 @@ import java.util.Map;
 
 public class FireBaseHandler extends AppCompatActivity
 {
-    public void Add(String TTNumber, String Date) {
+    public void Add(Map<String, Object> data) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> data = new HashMap<>();
-        data.put("TTNumber",TTNumber );
-        data.put("Date", Date);
-        db.collection("Calibration").document(TTNumber+"_"+Date)
+        db.collection("Calibration").document(data.get("TTNumber")+"_"+data.get("Date"))
                 .set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
